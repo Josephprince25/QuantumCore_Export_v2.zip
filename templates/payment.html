@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Quantum Core</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .checkout-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent-primary);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-pay:hover {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar (Simplified) -->
+        <aside class="sidebar">
+            <div class="brand">
+                <ion-icon name="prism-outline" class="logo-icon"></ion-icon>
+                <span>QUANTUM<span class="highlight">CORE</span></span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/pricing" class="nav-item">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                    Back to Pricing
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="checkout-container">
+                <h1 style="margin-bottom: 2rem;">Secure Checkout</h1>
+                <div
+                    style="margin-bottom: 2rem; padding: 1rem; background: rgba(0,240,255,0.1); border-radius: 8px; border: 1px solid var(--accent-primary);">
+                    <span style="color: var(--accent-primary);">Selected Plan:</span>
+                    <strong style="font-size: 1.2rem; margin-left: 0.5rem;">{{ plan }} Plan</strong>
+                </div>
+
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label>Cardholder Name</label>
+                        <input type="text" class="form-control" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19"
+                            required>
+                    </div>
+                    <div class="row">
+                        <div class="col form-group">
+                            <label>Expiry</label>
+                            <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="col form-group">
+                            <label>CVC</label>
+                            <input type="text" class="form-control" placeholder="123" maxlength="3" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-pay">
+                        <ion-icon name="lock-closed-outline"></ion-icon> Pay & Upgrade
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('payment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = '<ion-icon name="sync-outline" class="spin"></ion-icon> Processing...';
+            btn.disabled = true;
+
+            // Simulate API call
+            await new Promise(r => setTimeout(r, 1500));
+
+            try {
+                const res = await fetch('/api/upgrade', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plan: "{{ plan }}" })
+                });
+
+                if (res.ok) {
+                    btn.innerHTML = 'Success!';
+                    setTimeout(() => window.location.href = '/profile', 1000);
+                } else {
+                    throw new Error('Failed');
+                }
+            } catch (err) {
+                alert('Payment failed. Please try again.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

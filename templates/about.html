@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Quantum Core</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <ion-icon name="prism-outline" class="logo-icon"></ion-icon>
+                <span>QUANTUM<span class="highlight">CORE</span></span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-item">
+                    <ion-icon name="home-outline"></ion-icon>
+                    Home
+                </a>
+                <a href="/dashboard" class="nav-item">
+                    <ion-icon name="pulse-outline"></ion-icon>
+                    Live Scanner
+                </a>
+                <a href="/auto_trade" class="nav-item">
+                    <ion-icon name="infinite-outline"></ion-icon>
+                    Auto Trader
+                </a>
+                <a href="/pricing" class="nav-item">
+                    <ion-icon name="card-outline"></ion-icon>
+                    Pricing
+                </a>
+                <a href="/settings" class="nav-item">
+                    <ion-icon name="settings-outline"></ion-icon>
+                    Configuration
+                </a>
+                <a href="/about" class="nav-item active">
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                    About Us
+                </a>
+                <a href="/reviews" class="nav-item">
+                    <ion-icon name="star-outline"></ion-icon>
+                    Reviews
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>About Quantum Core</h1>
+            </header>
+
+            <div class="content-panel" style="padding: 3rem; max-width: 800px;">
+                <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--accent-primary);">The Future of
+                    Arbitrage</h2>
+                <p style="margin-bottom: 1.5rem; line-height: 1.6; color: var(--text-secondary);">
+                    Quantum Core was founded in 2024 by a team of ex-high frequency traders and systems engineers. Our
+                    mission is to democratize institutional-grade arbitrage tools for retail traders.
+                </p>
+                <p style="margin-bottom: 1.5rem; line-height: 1.6; color: var(--text-secondary);">
+                    Unlike traditional bots that rely on slow HTTP requests, Quantum Core utilizes direct websocket
+                    feeds and advanced pathfinding algorithms to detect triangular arbitrage opportunities across 5+
+                    exchanges in microseconds.
+                </p>
+
+                <div class="stats-grid" style="margin-top: 3rem;">
+                    <div class="stat-card">
+                        <div class="icon-box blue"><ion-icon name="flash"></ion-icon></div>
+                        <div class="stat-info">
+                            <span class="label">Speed</span>
+                            <span class="number">10ms</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon-box purple"><ion-icon name="people"></ion-icon></div>
+                        <div class="stat-info">
+                            <span class="label">Users</span>
+                            <span class="number">5k+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

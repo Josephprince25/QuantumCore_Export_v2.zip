@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews | Quantum Core</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .review-card {
+            background: var(--bg-card);
+            border: var(--glass-border);
+            padding: 2rem;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stars {
+            color: var(--accent-warning);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .user-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-primary);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <ion-icon name="prism-outline" class="logo-icon"></ion-icon>
+                <span>QUANTUM<span class="highlight">CORE</span></span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-item">
+                    <ion-icon name="home-outline"></ion-icon>
+                    Home
+                </a>
+                <a href="/dashboard" class="nav-item">
+                    <ion-icon name="pulse-outline"></ion-icon>
+                    Live Scanner
+                </a>
+                <a href="/pricing" class="nav-item">
+                    <ion-icon name="card-outline"></ion-icon>
+                    Pricing
+                </a>
+                <a href="/about" class="nav-item">
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                    About Us
+                </a>
+                <a href="/reviews" class="nav-item active">
+                    <ion-icon name="star-outline"></ion-icon>
+                    Reviews
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>User Reviews</h1>
+            </header>
+
+            <div class="review-grid">
+                <div class="review-card">
+                    <div class="stars">
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">"Absolutely game-changing. The latency on
+                        this bot is non-existent. I've been running the Pro plan for 2 months and the ROI is
+                        consistent."</p>
+                    <div class="user-meta">
+                        <div class="avatar">MK</div>
+                        <div>
+                            <div style="font-weight: 600;">Mike K.</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Pro Trader</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="stars">
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star-half"></ion-icon>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">"Cleanest UI in the crypto space. Most
+                        bots look like command lines from the 90s. Quantum Core actually feels professional."</p>
+                    <div class="user-meta">
+                        <div class="avatar">SJ</div>
+                        <div>
+                            <div style="font-weight: 600;">Sarah Jenkins</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Crypto Analyst</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="stars">
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                        <ion-icon name="star"></ion-icon>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">"Customer support helped me set up my API
+                        keys within minutes. The flash loan integration on the Enterprise plan is insane."</p>
+                    <div class="user-meta">
+                        <div class="avatar">DT</div>
+                        <div>
+                            <div style="font-weight: 600;">David T.</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Institutional Client</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

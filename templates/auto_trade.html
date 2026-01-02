@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Auto Trader | Quantum Core</title>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 140px);
+        }
+
+        .control-panel {
+            background: var(--bg-card);
+            border: var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .wallet-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 0.5rem;
+        }
+
+        .wallet-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+        }
+
+        .log-panel {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-y: auto;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--accent-primary);
+            display: flex;
+            flex-direction: column-reverse;
+            flex: 1;
+            /* Normal size */
+            min-height: 150px;
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .trade-table-container {
+            background: var(--bg-card);
+            border: var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <ion-icon name="prism-outline" class="logo-icon"></ion-icon>
+                <span>QUANTUM<span class="highlight">CORE</span></span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-item">
+                    <ion-icon name="home-outline"></ion-icon>
+                    Home
+                </a>
+                <a href="/dashboard" class="nav-item">
+                    <ion-icon name="pulse-outline"></ion-icon>
+                    Live Scanner
+                </a>
+                <a href="/auto_trade" class="nav-item active">
+                    <ion-icon name="infinite-outline"></ion-icon>
+                    Auto Trader
+                </a>
+                <a href="/pricing" class="nav-item">
+                    <ion-icon name="card-outline"></ion-icon>
+                    Pricing
+                </a>
+                <a href="/settings" class="nav-item">
+                    <ion-icon name="settings-outline"></ion-icon>
+                    Configuration
+                </a>
+                <a href="/about" class="nav-item">
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                    About Us
+                </a>
+                <a href="/reviews" class="nav-item">
+                    <ion-icon name="star-outline"></ion-icon>
+                    Reviews
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Autonomous Trading Engine <span class="status-pill idle" id="h-status">IDLE</span></h1>
+                <div class="user-badge"
+                    style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 20px;">
+                    <span>{{ user.username }}</span>
+                </div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Left Control Panel -->
+                <div class="control-panel">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <h3 style="font-size: 1.1rem; color: var(--text-secondary);">Trading Wallet</h3>
+                        <button id="edit-wal-btn" class="btn-icon" title="Edit Balance"
+                            style="background: rgba(255,255,255,0.05);">
+                            <ion-icon name="create-outline"></ion-icon>
+                        </button>
+                    </div>
+
+                    <div class="wallet-card">
+                        <div class="wallet-row">
+                            <span style="display:flex; align-items:center; gap:0.5rem; color: #94a3b8;">
+                                <ion-icon name="cash-outline"></ion-icon> USDT
+                            </span>
+                            <span id="bal-usdt"
+                                style="color: var(--text-primary); font-weight: 700; font-size: 1.1rem;">0.00</span>
+                        </div>
+                        <div class="wallet-row">
+                            <span style="display:flex; align-items:center; gap:0.5rem; color: #94a3b8;">
+                                <ion-icon name="cash-outline"></ion-icon> USDC
+                            </span>
+                            <span id="bal-usdc"
+                                style="color: var(--text-primary); font-weight: 700; font-size: 1.1rem;">0.00</span>
+                        </div>
+                        <hr style="border-color: rgba(255,255,255,0.1); margin: 0.75rem 0;">
+                        <div class="wallet-row">
+                            <span style="color: #94a3b8;">Total Profit</span>
+                            <span id="total-profit" class="profit-pos" style="font-size: 1.1rem;">+0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem; margin-top: 1rem;">
+                        <label
+                            style="color:var(--text-secondary); font-size:0.85rem; margin-bottom: 0.5rem; display: block; text-transform: uppercase; letter-spacing: 1px;">Execution
+                            Mode</label>
+                        <div style="position: relative;">
+                            <select id="mode-select"
+                                style="width:100%; padding:0.85rem; background:var(--bg-dark); color:white; border-radius:8px; border:1px solid var(--border-color); outline:none; appearance: none; font-family: 'Space Mono'; cursor: pointer;">
+                                <option value="PAPER">Simulated Trading (Paper)</option>
+                                <option value="LIVE_TESTNET">Bybit Testnet (Live)</option>
+                            </select>
+                            <ion-icon name="chevron-down-outline"
+                                style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-secondary);"></ion-icon>
+                        </div>
+                    </div>
+
+                    <div style="flex:1;"></div>
+
+                    <button id="toggle-btn" class="btn-primary"
+                        style="width: 100%; justify-content: center; margin-bottom: 1rem; height: 55px; font-size: 1rem; border-radius: 12px;">
+                        <ion-icon name="play-circle-outline" style="font-size: 1.4rem;"></ion-icon> Start Auto-Trade
+                    </button>
+
+                    <a href="/settings" class="btn-primary"
+                        style="width: 100%; justify-content: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); height: 45px; border-radius: 12px; font-size: 0.9rem;">
+                        <ion-icon name="settings-outline"></ion-icon> Configure Keys
+                    </a>
+                </div>
+
+                <!-- Right Logs & History -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem; overflow: hidden;">
+                    <!-- Logs -->
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1; max-height: 40%;">
+                        <div class="panel-header"
+                            style="padding: 0; border: none; display: flex; align-items: center; gap: 0.5rem;">
+                            <span
+                                style="width: 8px; height: 8px; background: var(--accent-primary); border-radius: 50%; display: inline-block;"></span>
+                            <h3>System Activity Log</h3>
+                        </div>
+                        <div class="log-panel" id="log-console">
+                            <div class="log-entry">> System Ready.</div>
+                        </div>
+                    </div>
+
+                    <!-- History Table -->
+                    <div class="trade-table-container" style="flex: 2;">
+                        <div class="panel-header">
+                            <h2>Execution History</h2>
+                        </div>
+                        <div class="table-container" style="flex:1; overflow:auto;">
+                            <table id="trade-history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Exchange</th>
+                                        <th>Path</th>
+                                        <th>Fees</th>
+                                        <th>Profit</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Balance Edit Modal -->
+    <div class="modal-overlay hidden" id="bal-modal">
+        <div class="modal-content" style="max-width: 400px; padding: 0;">
+            <div class="modal-header">
+                <h3>Update Wallet Balance</h3>
+                <button class="btn-icon" id="close-bal-modal"><ion-icon name="close-outline"></ion-icon></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">USDT
+                        Balance</label>
+                    <input type="number" id="input-usdt" step="0.01"
+                        style="width:100%; padding:0.85rem; background:rgba(0,0,0,0.3); border:1px solid var(--border-color); color:white; border-radius:8px; font-family: 'Space Mono'; font-size: 1.1rem;">
+                </div>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">USDC
+                        Balance</label>
+                    <input type="number" id="input-usdc" step="0.01"
+                        style="width:100%; padding:0.85rem; background:rgba(0,0,0,0.3); border:1px solid var(--border-color); color:white; border-radius:8px; font-family: 'Space Mono'; font-size: 1.1rem;">
+                </div>
+                <button id="save-bal-action" class="btn-primary"
+                    style="width:100%; justify-content: center; height: 50px;">
+                    <ion-icon name="save-outline"></ion-icon> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isRunning = false;
+        const toggleBtn = document.getElementById('toggle-btn');
+        const logConsole = document.getElementById('log-console');
+        const historyBody = document.getElementById('history-body');
+        const modeSelect = document.getElementById('mode-select');
+
+        // Modal Elements
+        const balModal = document.getElementById('bal-modal');
+        const editBalBtn = document.getElementById('edit-wal-btn');
+        const closeBalBtn = document.getElementById('close-bal-modal');
+        const saveBalAction = document.getElementById('save-bal-action');
+        const inputUsdt = document.getElementById('input-usdt');
+        const inputUsdc = document.getElementById('input-usdc');
+
+        // Poll status every 2 seconds
+        setInterval(updateStatus, 2000);
+
+        // --- Event Listeners ---
+
+        toggleBtn.addEventListener('click', async () => {
+            // If starting, send mode
+            const endpoint = isRunning ? '/api/auto/stop' : '/api/auto/start';
+            const body = isRunning ? {} : { mode: modeSelect.value };
+
+            try {
+                // Change UI immediately for feedback
+                toggleBtn.style.opacity = "0.7";
+
+                await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                await updateStatus(); // Force update
+                toggleBtn.style.opacity = "1";
+            } catch (e) {
+                alert("Failed to toggle auto-trader: " + e);
+                toggleBtn.style.opacity = "1";
+            }
+        });
+
+        // Open Modal
+        editBalBtn.addEventListener('click', () => {
+            // Pre-fill current values from display
+            inputUsdt.value = document.getElementById('bal-usdt').textContent;
+            inputUsdc.value = document.getElementById('bal-usdc').textContent;
+            balModal.classList.remove('hidden');
+        });
+
+        // Close Modal
+        closeBalBtn.addEventListener('click', () => balModal.classList.add('hidden'));
+
+        // Save Balance
+        saveBalAction.addEventListener('click', async () => {
+            const usdt = parseFloat(inputUsdt.value) || 0;
+            const usdc = parseFloat(inputUsdc.value) || 0;
+
+            saveBalAction.textContent = "Saving...";
+
+            try {
+                await fetch('/api/update_balance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usdt, usdc })
+                });
+                balModal.classList.add('hidden');
+                updateStatus(); // Refresh immediately
+            } catch (e) {
+                alert("Failed to update balance");
+            } finally {
+                saveBalAction.innerHTML = '<ion-icon name="save-outline"></ion-icon> Save Changes';
+            }
+        });
+
+        async function updateStatus() {
+            try {
+                const res = await fetch('/api/auto/status');
+                const data = await res.json();
+
+                isRunning = data.running;
+
+                // Update Button Text & Color
+                if (isRunning) {
+                    toggleBtn.innerHTML = '<ion-icon name="stop-circle-outline" style="font-size:1.4rem;"></ion-icon> Stop Operations';
+                    toggleBtn.style.background = "var(--accent-danger)";
+                    toggleBtn.style.boxShadow = "0 0 15px rgba(255, 0, 85, 0.4)";
+                } else {
+                    const modeName = modeSelect.value === 'PAPER' ? 'Simulation' : 'Live Testnet';
+                    toggleBtn.innerHTML = `<ion-icon name="play-circle-outline" style="font-size:1.4rem;"></ion-icon> Start ${modeName}`;
+                    toggleBtn.style.background = "var(--accent-primary)";
+                    toggleBtn.style.boxShadow = "0 0 20px rgba(0, 240, 255, 0.3)";
+                }
+
+                // Update Header Status
+                const hStatus = document.getElementById('h-status');
+                hStatus.textContent = isRunning ? "RUNNING" : "IDLE";
+                hStatus.className = `status-pill ${isRunning ? 'status-profitable' : 'idle'}`;
+
+                // Update Wallet Display
+                const usdtVal = data.balance.USDT !== undefined ? data.balance.USDT : data.balance.get('USDT', 0);
+                const usdcVal = data.balance.USDC !== undefined ? data.balance.USDC : data.balance.get('USDC', 0);
+
+                document.getElementById('bal-usdt').textContent = parseFloat(usdtVal).toFixed(2);
+                document.getElementById('bal-usdc').textContent = parseFloat(usdcVal).toFixed(2);
+                document.getElementById('total-profit').textContent = (data.total_profit >= 0 ? "+" : "") + data.total_profit.toFixed(4);
+
+                // Color profit
+                const profEl = document.getElementById('total-profit');
+                if (data.total_profit >= 0) {
+                    profEl.className = "profit-pos";
+                    profEl.style.color = "var(--accent-success)";
+                } else {
+                    profEl.className = "profit-neg";
+                    profEl.style.color = "var(--accent-danger)";
+                }
+
+                // Update Logs
+                logConsole.innerHTML = data.logs.map(l => `<div class="log-entry">${l}</div>`).join('');
+
+                // Update History
+                historyBody.innerHTML = data.history.map(t => `
+                    <tr>
+                        <td>${new Date(t.timestamp * 1000).toLocaleTimeString()}</td>
+                        <td><span class="exch-badge">${t.exchange}</span></td>
+                        <td><div style="max-width:200px; overflow-x:auto;">${t.path.join(' -> ')}</div></td>
+                        <td style="color:var(--text-secondary); font-size:0.85rem;">${t.fees_paid || '0%'}</td>
+                        <td class="${t.profit >= 0 ? 'profit-pos' : 'profit-neg'}">${t.profit > 0 ? '+' : ''}${t.profit}</td>
+                    </tr>
+                `).join('');
+
+            } catch (e) {
+                console.error("Status fetch error", e);
+            }
+        }
+
+        // Initial call
+        updateStatus();
+    </script>
+</body>
+
+</html>

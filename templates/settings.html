@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Configuration | Quantum Core</title>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .config-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="brand">
+                <ion-icon name="prism-outline" class="logo-icon"></ion-icon>
+                <span>QUANTUM<span class="highlight">CORE</span></span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-item">
+                    <ion-icon name="home-outline"></ion-icon>
+                    Home
+                </a>
+                <a href="/dashboard" class="nav-item">
+                    <ion-icon name="pulse-outline"></ion-icon>
+                    Live Scanner
+                </a>
+                <a href="/pricing" class="nav-item">
+                    <ion-icon name="card-outline"></ion-icon>
+                    Pricing
+                </a>
+                <a href="/settings" class="nav-item active">
+                    <ion-icon name="settings-outline"></ion-icon>
+                    Configuration
+                </a>
+                <a href="/about" class="nav-item">
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                    About Us
+                </a>
+                <a href="/reviews" class="nav-item">
+                    <ion-icon name="star-outline"></ion-icon>
+                    Reviews
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>System Configuration</h1>
+                <div class="user-badge"
+                    style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 20px;">
+                    <span>{{ user.username }}</span>
+                    <a href="/logout"><ion-icon name="log-out-outline"></ion-icon></a>
+                </div>
+            </header>
+
+            <div class="config-card">
+                <form method="POST" action="/settings">
+                    <div class="form-group">
+                        <label>Start Amount (USDT)</label>
+                        <input type="number" name="start_amount" value="{{ config.start_amount }}" step="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Min Profit %</label>
+                        <input type="number" name="min_profit" value="{{ config.min_profit }}" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Search Depth</label>
+                        <select name="max_depth">
+                            <option value="2" {% if config.max_depth==2 %}selected{% endif %}>2 (Fastest)</option>
+                            <option value="3" {% if config.max_depth==3 %}selected{% endif %}>3 (Balanced)</option>
+                            <option value="4" {% if config.max_depth==4 %}selected{% endif %}>4 (Complex)</option>
+                        </select>
+                    </div>
+
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--accent-primary);">Auto-Trade Setup (Bybit Testnet)
+                    </h3>
+
+                    <div class="form-group">
+                        <label>Execution Mode</label>
+                        <select name="trade_mode">
+                            <option value="PAPER" {% if config.trade_mode=='PAPER' %}selected{% endif %}>Paper Trading
+                                (Simulation)</option>
+                            <option value="LIVE_TESTNET" {% if config.trade_mode=='LIVE_TESTNET' %}selected{% endif %}>
+                                Live Testnet (Real Execution)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bybit API Key (Testnet)</label>
+                        <input type="text" name="bybit_key" value="{{ config.bybit_key }}"
+                            placeholder="Your Testnet API Key">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bybit API Secret (Testnet)</label>
+                        <input type="password" name="bybit_secret" value="{{ config.bybit_secret }}"
+                            placeholder="Your Testnet API Secret">
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Save Configuration</button>
+
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div style="margin-top: 1rem; color: var(--accent-green); text-align: center;">{{ messages[0] }}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

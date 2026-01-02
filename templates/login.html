@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Quantum Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .auth-container {
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+        }
+
+        .auth-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 16px;
+            width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .auth-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-auth:hover {
+            opacity: 0.9;
+        }
+
+        .toggle-auth {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .toggle-auth a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <ion-icon name="prism-outline"></ion-icon> Quantum Core
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Professional Arbitrage Engine</p>
+
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div
+                style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 0.75rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                {{ messages[0] }}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="/login" id="login-form">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required placeholder="Enter your username">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn-auth">Access Dashboard</button>
+            </form>
+
+            <!-- Simple Register Toggle for Demo -->
+            <form method="POST" action="/register" id="register-form" style="display: none;">
+                <div class="input-group">
+                    <label>Choose Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label>Choose Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-auth">Register Account</button>
+            </form>
+
+            <div class="toggle-auth">
+                <span id="toggle-text">New to Quantum?</span>
+                <a onclick="toggleForm()">Create Account</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLogin = true;
+        function toggleForm() {
+            isLogin = !isLogin;
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const toggleText = document.getElementById('toggle-text');
+            const link = document.querySelector('.toggle-auth a');
+
+            if (isLogin) {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                toggleText.textContent = "New to Quantum?";
+                link.textContent = "Create Account";
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                toggleText.textContent = "Already have access?";
+                link.textContent = "Login";
+            }
+        }
+    </script>
+</body>
+
+</html>

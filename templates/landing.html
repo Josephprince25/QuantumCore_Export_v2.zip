@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Core | Premium Arbitrage Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* Landing Specific Overrides */
+        body {
+            overflow-x: hidden;
+            border: none;
+        }
+
+        .hero {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(0, 240, 255, 0.1) 0%, rgba(2, 6, 23, 0) 70%);
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 2rem;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            background: linear-gradient(to bottom, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -3px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .btn-xl {
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section {
+            padding: 8rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .feature-card,
+        .review-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s;
+        }
+
+        /* Market Ticker */
+        .ticker-wrap {
+            width: 100%;
+            background: rgba(2, 6, 23, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker {
+            display: inline-block;
+            animation: ticker 30s linear infinite;
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 2rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .ticker-value {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .ticker-change.pos {
+            color: var(--accent-success);
+        }
+
+        .ticker-change.neg {
+            color: var(--accent-danger);
+        }
+
+        @keyframes ticker {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .stars {
+            color: var(--accent-warning);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Avatar Styling */
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-primary);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            background: #020617;
+        }
+    </style>
+</head>
+
+<body>
+    <nav
+        style="position: fixed; top: 0; width: 100%; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <div class="logo"
+            style="font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 0.8rem; letter-spacing: -1px;">
+            <ion-icon name="prism-outline" style="color: var(--accent-primary);"></ion-icon> QUANTUM CORE
+        </div>
+        <div class="nav-links" style="display: flex; gap: 2rem; align-items: center;">
+            <a href="#about" style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">About</a>
+            <a href="#reviews"
+                style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Reviews</a>
+            {% if user %}
+            <a href="/settings"
+                style="color: var(--text-secondary); text-decoration: none; font-weight: 500;">Profile</a>
+            <a href="/dashboard" class="btn-primary" style="text-decoration: none;">Dashboard</a>
+            {% else %}
+            <a href="/login" class="btn-primary" style="text-decoration: none;">Login / Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>The Future of<br>Arbitrage Trading</h1>
+            <p>Institutional-grade execution speed. Direct exchange connections. <br>Zero-risk simulation engine for
+                algorithmic traders.</p>
+            <div class="cta-group">
+                {% if user %}
+                <a href="/dashboard" class="btn-primary btn-xl" style="text-decoration: none;">Launch Dashboard</a>
+                {% else %}
+                <a href="/login" class="btn-primary btn-xl" style="text-decoration: none;">Start Scanning</a>
+                {% endif %}
+                <a href="/dashboard" class="btn-secondary btn-xl"
+                    style="background: rgba(255,255,255,0.05); text-decoration: none; color: white; border: 1px solid rgba(255,255,255,0.1);">View
+                    Markets</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Market Ticker Section -->
+    <div id="market" class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item">BTC/USDT <span class="ticker-value">$98,420</span> <span
+                    class="ticker-change pos">+1.2%</span></div>
+            <div class="ticker-item">ETH/USDT <span class="ticker-value">$4,850</span> <span
+                    class="ticker-change pos">+2.4%</span></div>
+            <div class="ticker-item">SOL/USDT <span class="ticker-value">$145.20</span> <span
+                    class="ticker-change neg">-0.5%</span></div>
+            <div class="ticker-item">BNB/USDT <span class="ticker-value">$620.10</span> <span
+                    class="ticker-change pos">+0.8%</span></div>
+            <div class="ticker-item">XRP/USDT <span class="ticker-value">$1.12</span> <span
+                    class="ticker-change pos">+5.2%</span></div>
+            <!-- Duplicate for loop -->
+            <div class="ticker-item">BTC/USDT <span class="ticker-value">$98,420</span> <span
+                    class="ticker-change pos">+1.2%</span></div>
+            <div class="ticker-item">ETH/USDT <span class="ticker-value">$4,850</span> <span
+                    class="ticker-change pos">+2.4%</span></div>
+            <div class="ticker-item">SOL/USDT <span class="ticker-value">$145.20</span> <span
+                    class="ticker-change neg">-0.5%</span></div>
+            <div class="ticker-item">BNB/USDT <span class="ticker-value">$620.10</span> <span
+                    class="ticker-change pos">+0.8%</span></div>
+            <div class="ticker-item">XRP/USDT <span class="ticker-value">$1.12</span> <span
+                    class="ticker-change pos">+5.2%</span></div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="section-header">
+            <h2>About Quantum Core</h2>
+            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto; line-height: 1.6;">
+                Founded in 2024 by ex-HFT engineers, we provide the infrastructure typically reserved for hedge funds to
+                the retail market.
+            </p>
+        </div>
+        <div class="grid-3">
+            <div class="feature-card">
+                <div style="font-size: 3rem; color: var(--accent-primary); margin-bottom: 1.5rem;"><ion-icon
+                        name="flash"></ion-icon></div>
+                <h3>Microsecond Latency</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-top: 1rem;">Our proprietary engine
+                    bypasses standard API rate limits using direct websocket streams.</p>
+            </div>
+            <div class="feature-card">
+                <div style="font-size: 3rem; color: var(--accent-secondary); margin-bottom: 1.5rem;"><ion-icon
+                        name="globe"></ion-icon></div>
+                <h3>Global Coverage</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-top: 1rem;">Instantly scan Binance,
+                    KuCoin, Bybit, and MEXC simultaneously for price discrepancies.</p>
+            </div>
+            <div class="feature-card">
+                <div style="font-size: 3rem; color: var(--accent-success); margin-bottom: 1.5rem;"><ion-icon
+                        name="shield-checkmark"></ion-icon></div>
+                <h3>Bank-Grade Security</h3>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-top: 1rem;">Non-custodial architecture
+                    means your funds never leave your exchange wallets.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="section" style="background: rgba(255,255,255,0.01);">
+        <div class="section-header">
+            <h2>Trader Reviews</h2>
+            <p>Join 5,000+ traders automating their edge.</p>
+        </div>
+        <div class="grid-3">
+            <div class="review-card">
+                <div class="stars">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon
+                        name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                </div>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">"The only scanner that
+                    actually accounts for gas fees correctly. Saved me thousands in failed trades."</p>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <div class="avatar">MK</div>
+                    <div>
+                        <div style="font-weight: 700;">Mike K.</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Pro Trader</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <div class="stars">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon
+                        name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star-half"></ion-icon>
+                </div>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">"I was skeptical about
+                    arbitrage bots, but the simulation mode proved the strategy works before I risked a cent."</p>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <div class="avatar">SJ</div>
+                    <div>
+                        <div style="font-weight: 700;">Sarah J.</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Crypto Analyst</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <div class="stars">
+                    <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon
+                        name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                </div>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">"Customer support is top
+                    tier. They helped me configure my custom node connection in under 20 minutes."</p>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <div class="avatar">DT</div>
+                    <div>
+                        <div style="font-weight: 700;">David T.</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Fund Manager</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; opacity: 0.5;">
+            <ion-icon name="logo-twitter" style="font-size: 1.5rem;"></ion-icon>
+            <ion-icon name="logo-discord" style="font-size: 1.5rem;"></ion-icon>
+            <ion-icon name="logo-github" style="font-size: 1.5rem;"></ion-icon>
+        </div>
+        <p>&copy; 2026 Quantum Core. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

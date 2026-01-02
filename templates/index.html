@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Exchange Arbitrage | Quantum Core</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <ion-icon name="prism-outline" class="logo-icon"></ion-icon>
+                <span>QUANTUM<span class="highlight">CORE</span></span>
+            </div>
+
+
+
+            <nav class="nav-menu">
+                <a href="/" class="nav-item">
+                    <ion-icon name="home-outline"></ion-icon>
+                    Home
+                </a>
+                <a href="/dashboard" class="nav-item active">
+                    <ion-icon name="pulse-outline"></ion-icon>
+                    Live Scanner
+                </a>
+                <a href="/auto_trade" class="nav-item">
+                    <ion-icon name="infinite-outline"></ion-icon>
+                    Auto Trader
+                </a>
+                <a href="/pricing" class="nav-item">
+                    <ion-icon name="card-outline"></ion-icon>
+                    Pricing
+                </a>
+                <a href="/settings" class="nav-item">
+                    <ion-icon name="settings-outline"></ion-icon>
+                    Configuration
+                </a>
+                <a href="/about" class="nav-item">
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                    About Us
+                </a>
+                <a href="/reviews" class="nav-item">
+                    <ion-icon name="star-outline"></ion-icon>
+                    Reviews
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Multi-Exchange Scanner</h1>
+                <div class="actions">
+                    <div class="user-badge"
+                        style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid var(--border-color); margin-right: 1rem;">
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                        <a href="/profile" style="color: white; text-decoration: none;"><span
+                                style="font-size: 0.9rem; font-weight: 500;">{{ user.username }}</span></a>
+                        <a href="/logout" title="Logout"
+                            style="color: var(--text-secondary); margin-left: 0.5rem;"><ion-icon
+                                name="log-out-outline"></ion-icon></a>
+                    </div>
+
+                    <div id="scan-status" class="status-pill idle">Ready</div>
+                    <button id="scan-btn" class="btn-primary">
+                        <ion-icon name="scan-circle-outline"></ion-icon>
+                        Start Scan
+                    </button>
+                </div>
+            </header>
+
+            <!-- Exchange Selector (Moved from Sidebar) -->
+            <div class="content-panel" style="margin-bottom: 2rem; min-height: auto;">
+                <div class="panel-header">
+                    <h2>Target Exchanges</h2>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <div class="checkbox-group" id="exchange-list"
+                        style="flex-direction: row; flex-wrap: wrap; gap: 2rem;">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon-box blue"><ion-icon name="cube-outline"></ion-icon></div>
+                    <div class="stat-info">
+                        <span class="label">Exchanges</span>
+                        <span class="number" id="exch-count">--</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon-box purple"><ion-icon name="layers-outline"></ion-icon></div>
+                    <div class="stat-info">
+                        <span class="label">Paths Analyzed</span>
+                        <span class="number" id="paths-analyzed">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon-box green"><ion-icon name="trending-up-outline"></ion-icon></div>
+                    <div class="stat-info">
+                        <span class="label">Profitable Opportunities</span>
+                        <span class="number highlight" id="profit-count">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opportunities Table -->
+            <div class="content-panel">
+                <div class="panel-header">
+                    <h2>Live Opportunities (>0.2%)</h2>
+                    <div class="filters">
+                        <span class="filter-label">Min Profit: <span id="min-profit-val">0.2%</span></span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Exc</th>
+                                <th>Timestamp</th>
+                                <th>Path</th>
+                                <th>Start</th>
+                                <th>End (Est.)</th>
+                                <th>Fees</th>
+                                <th>Profit</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <tr class="empty-state">
+                                <td colspan="8">
+                                    <div class="empty-message">
+                                        <ion-icon name="search-outline"></ion-icon>
+                                        <p>No profitable opportunities found.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- All Operations Table -->
+            <div class="content-panel" style="margin-top: 2rem;">
+                <div class="panel-header">
+                    <h2>Recent Analyzed Paths (Top 50)</h2>
+                </div>
+
+                <div class="table-container">
+                    <table id="all-results-table">
+                        <thead>
+                            <tr>
+                                <th>Exc</th>
+                                <th>Timestamp</th>
+                                <th>Path</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Fees</th>
+                                <th>Profit</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-results-body">
+                            <tr class="empty-state">
+                                <td colspan="8">
+                                    <div class="empty-message">
+                                        <p>Waiting for scan...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Fee Details Modal -->
+    <div id="fee-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3><ion-icon name="receipt-outline"></ion-icon> Fee Breakdown</h3>
+                <button id="close-modal" class="btn-icon"><ion-icon name="close-outline"></ion-icon></button>
+            </header>
+            <div class="modal-body">
+                <table class="details-table">
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Pair</th>
+                            <th>Action</th>
+                            <th>Fee Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fee-modal-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>
