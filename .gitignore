@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Database
+*.db
+*.sqlite3
+instance/
+
+# Flask
+instance/
+
+# IDEs
+.vscode/
+.idea/
+
+# Project Specific
+firebase_credentials.json
+logs/
+cache_symbols_*.json
+firebase_service_account_keys.json
+
+# MacOS
+.DS_Store
